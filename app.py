@@ -1,21 +1,21 @@
 import streamlit as st
 import numpy as np
-import gymnasium as gym
-from gymnasium.wrappers import AtariPreprocessing, FrameStack
+import gym  # Using gym instead of gymnasium
+from gym.wrappers import AtariPreprocessing  # Older gym API
 import time
 import matplotlib.pyplot as plt
 from PIL import Image
-import cv2
 
 def create_breakout_env():
     """Create Atari Breakout environment with basic preprocessing"""
-    env = gym.make('ALE/Breakout-v5', render_mode='rgb_array')
-    # Basic preprocessing - optional but standard practice
+    env = gym.make('BreakoutNoFrameskip-v4', render_mode='rgb_array')
+    # Basic preprocessing
     env = AtariPreprocessing(
         env, 
         frame_skip=4,
         grayscale_obs=False,  # Keep color for better visualization
-        scale_obs=False
+        scale_obs=False,
+        terminal_on_life_loss=False
     )
     return env
 
@@ -47,7 +47,7 @@ def main():
     # Session state to keep track of game state
     if 'env' not in st.session_state:
         st.session_state.env = create_breakout_env()
-        st.session_state.obs = st.session_state.env.reset()[0]
+        st.session_state.obs = st.session_state.env.reset()
         st.session_state.total_reward = 0
         st.session_state.done = False
         st.session_state.episode_rewards = []
@@ -77,7 +77,7 @@ def main():
         # Add Fire button to start new game
         if st.button("Fire Ball"):
             # Fire action (1) to start game or launch new ball
-            temp_obs, temp_reward, temp_terminated, temp_truncated, temp_info = st.session_state.env.step(1)
+            temp_obs, temp_reward, temp_done, temp_info = st.session_state.env.step(1)
             st.session_state.obs = temp_obs
             # Update the game display
             game_image.image(temp_obs, caption="Breakout Game", use_column_width=True)
@@ -92,23 +92,28 @@ def main():
         action = get_action_from_slider(paddle_position)
         
         # Take action in environment
-        obs, reward, terminated, truncated, info = st.session_state.env.step(action)
+        try:
+            # Old gym API
+            obs, reward, done, info = st.session_state.env.step(action)
+            
+            # Update session state
+            st.session_state.obs = obs
+            st.session_state.total_reward += reward
+            st.session_state.done = done
+            
+            # Update game display
+            game_image.image(obs, caption="Breakout Game", use_column_width=True)
+            
+            # Update stats
+            score_text.markdown(f"**Score:** {st.session_state.total_reward}")
+            
+            # Check for lives change
+            if 'ale.lives' in info and info['ale.lives'] != st.session_state.current_lives:
+                st.session_state.current_lives = info['ale.lives']
+                lives_text.markdown(f"**Lives:** {st.session_state.current_lives}")
         
-        # Update session state
-        st.session_state.obs = obs
-        st.session_state.total_reward += reward
-        st.session_state.done = terminated or truncated
-        
-        # Update game display
-        game_image.image(obs, caption="Breakout Game", use_column_width=True)
-        
-        # Update stats
-        score_text.markdown(f"**Score:** {st.session_state.total_reward}")
-        
-        # Check for lives change
-        if 'lives' in info and info['lives'] != st.session_state.current_lives:
-            st.session_state.current_lives = info['lives']
-            lives_text.markdown(f"**Lives:** {st.session_state.current_lives}")
+        except Exception as e:
+            st.error(f"Error during game step: {e}")
     
     # Reset if game is over
     if st.session_state.done:
@@ -116,7 +121,7 @@ def main():
         st.session_state.episode_rewards.append(st.session_state.total_reward)
         
         if st.button("Reset Game"):
-            st.session_state.obs = st.session_state.env.reset()[0]
+            st.session_state.obs = st.session_state.env.reset()
             st.session_state.total_reward = 0
             st.session_state.done = False
             st.session_state.current_lives = 5
