@@ -1,14 +1,11 @@
-# Core dependencies
-streamlit>=1.30.0
-numpy>=1.22.0
-matplotlib>=3.5.0
-Pillow>=9.0.0
-opencv-python>=4.5.5
-
-# Gymnasium (Gym successor) and Atari environments
-gymnasium>=0.28.1
-gymnasium[atari]>=0.28.1
-gymnasium[accept-rom-license]>=0.28.1
-ale-py>=0.8.1
-AutoROM>=0.6.1
-AutoROM.accept-rom-license>=0.6.1
+streamlit
+numpy
+matplotlib
+Pillow
+opencv-python
+gymnasium
+gymnasium[atari]
+gymnasium[accept-rom-license]
+ale-py
+AutoROM
+AutoROM.accept-rom-license
