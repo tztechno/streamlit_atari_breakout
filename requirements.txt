@@ -2,10 +2,6 @@ streamlit
 numpy
 matplotlib
 Pillow
-opencv-python
-gymnasium
-gymnasium[atari]
-gymnasium[accept-rom-license]
-ale-py
-AutoROM
-AutoROM.accept-rom-license
+gym
+gym[atari]
+atari-py
