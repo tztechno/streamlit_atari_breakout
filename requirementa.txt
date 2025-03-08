@@ -1,0 +1,6 @@
+streamlit
+numpy
+gymnasium
+matplotlib
+PIL
+opencv-python
