@@ -1,5 +1,9 @@
 streamlit
 numpy
-gymnasium
 matplotlib
 PIL
+gymnasium[atari]
+gymnasium[accept-rom-license]
+stable-baselines3[extra]
+AutoROM --accept-license
+cv2
