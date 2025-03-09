@@ -1,9 +1,8 @@
 streamlit==1.32.0
-numpy==1.26.0
-matplotlib==3.8.2
-Pillow==10.2.0
+numpy==1.22.4
+gym==0.21.0
 pygame==2.5.2
-opencv-python-headless==4.9.0.80
-gymnasium==0.28.1
-gymnasium[atari]==0.28.1
-shimmy==0.2.1
+matplotlib==3.7.2
+Pillow==9.5.0
+tensorflow-cpu==2.13.0
+ale-py==0.7.5
