@@ -1,9 +1,9 @@
 streamlit==1.32.0
 numpy==1.26.0
-gym==0.23.1
 matplotlib==3.8.2
 Pillow==10.2.0
 pygame==2.5.2
-opencv-python==4.9.0.80
-atari-py==0.2.9
-autorom[accept-rom-license]==0.6.1
+opencv-python-headless==4.9.0.80
+gymnasium==0.28.1
+gymnasium[atari]==0.28.1
+shimmy==0.2.1
